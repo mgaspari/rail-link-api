@@ -1,6 +1,6 @@
 """Validate generated JSON against pydantic schemas and invariant gates.
 
-Run after :mod:`scripts.generate` and before committing. Exits non-zero
+Run after ``scripts.generate`` and before committing. Exits non-zero
 (and prints a one-line reason per failure) when any of the following hold:
 
 - A JSON payload fails its pydantic schema.
