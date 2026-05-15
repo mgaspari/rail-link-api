@@ -1,0 +1,11 @@
+# Weekly refresh workflow — fully wired at build-order step 9.
+# Placeholder kept so the path exists; real triggers, concurrency, timeout,
+# dep-audit and issue-on-failure are added in step 9.
+name: refresh
+on:
+  workflow_dispatch:
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "refresh.yml: placeholder — implemented at step 9"'
