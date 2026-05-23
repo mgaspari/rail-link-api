@@ -10,6 +10,7 @@ don't go red.
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -55,6 +56,38 @@ def test_parse_period_row_forward_fills() -> None:
 def test_slugify_lowercases_and_dashes() -> None:
     assert parse._slugify("Spuyten Duyvil") == "spuyten-duyvil"
     assert parse._slugify("W 231 St / Broadway") == "w-231-st-broadway"
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Effective October 6, 2025", date(2025, 10, 6)),
+        ("effective october 6 2025", date(2025, 10, 6)),
+        ("EFFECTIVE OCTOBER 6, 2025", date(2025, 10, 6)),
+        ("Effective: October 6, 2025", date(2025, 10, 6)),
+        ("Effective Date: October 6, 2025", date(2025, 10, 6)),
+        ("Effective Date October 6, 2025", date(2025, 10, 6)),
+        ("Effective Oct 6, 2025", date(2025, 10, 6)),
+        ("Effective Monday, October 6, 2025", date(2025, 10, 6)),
+        ("Schedule effective 10/06/2025 until further notice", date(2025, 10, 6)),
+        ("Effective Date: 10/6/2025", date(2025, 10, 6)),
+        ("blurb\nEffective\nOctober 6, 2025\nmore", date(2025, 10, 6)),
+    ],
+)
+def test_parse_effective_date_from_text(text: str, expected: date) -> None:
+    assert parse._parse_effective_date_from_text(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "no relevant date here",
+        "Effective sometime soon",
+        "Effective 13/45/2025",
+    ],
+)
+def test_parse_effective_date_from_text_returns_none(text: str) -> None:
+    assert parse._parse_effective_date_from_text(text) is None
 
 
 def test_schema_rejects_bad_time() -> None:

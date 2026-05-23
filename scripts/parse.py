@@ -39,7 +39,7 @@ from __future__ import annotations
 
 import re
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Iterable
 
@@ -49,9 +49,11 @@ from scripts.schemas import Direction, ServiceDay
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-EFFECTIVE_DATE_RE = re.compile(
-    r"[Ee]ffective\s+([A-Za-z]+\s+\d{1,2},?\s+\d{4})"
+EFFECTIVE_ANCHOR_RE = re.compile(r"effective(?:\s+date)?\b", re.IGNORECASE)
+EFFECTIVE_MONTH_DATE_RE = re.compile(
+    r"([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})"
 )
+EFFECTIVE_NUMERIC_DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 TIME_PAIR_RE = re.compile(r"^\s*(\d{1,2})\s+(\d{2})\s*$")
 ROUTE_LETTERS = {"J", "K", "L", "M"}
 AM_PM_RE = re.compile(r"^(AM|PM)$", re.IGNORECASE)
@@ -106,19 +108,66 @@ def _parse_period_row(row: list[str | None]) -> list[str | None]:
     return out
 
 
+def _parse_effective_date_from_text(text: str) -> date | None:
+    """Locate the effective date in a page of text.
+
+    Tolerates variations like "Effective October 6, 2025",
+    "Effective: Oct 6, 2025", "EFFECTIVE DATE: 10/06/2025", and an
+    optional weekday word ("Effective Monday, October 6, 2025") that
+    sits between the anchor and the date.
+    """
+    anchor = EFFECTIVE_ANCHOR_RE.search(text)
+    if anchor is None:
+        return None
+    window = text[anchor.end() : anchor.end() + 120]
+
+    m = EFFECTIVE_MONTH_DATE_RE.search(window)
+    if m is not None:
+        month_str, day_str, year_str = m.group(1), m.group(2), m.group(3)
+        for fmt in ("%B %d %Y", "%b %d %Y"):
+            try:
+                return datetime.strptime(
+                    f"{month_str} {day_str} {year_str}", fmt
+                ).date()
+            except ValueError:
+                continue
+
+    n = EFFECTIVE_NUMERIC_DATE_RE.search(window)
+    if n is not None:
+        mm, dd, yyyy = (int(g) for g in n.groups())
+        try:
+            return date(yyyy, mm, dd)
+        except ValueError:
+            return None
+    return None
+
+
+def _effective_date_diagnostic(pdf: pdfplumber.PDF) -> str:
+    snippets: list[str] = []
+    for page_num, page in enumerate(pdf.pages, start=1):
+        text = page.extract_text() or ""
+        for m in re.finditer(r"effective", text, re.IGNORECASE):
+            start = max(0, m.start() - 20)
+            end = min(len(text), m.end() + 80)
+            snippets.append(f"page {page_num}: …{text[start:end]!r}…")
+            if len(snippets) >= 5:
+                return "\n".join(snippets)
+    if snippets:
+        return "\n".join(snippets)
+    first_text = (pdf.pages[0].extract_text() or "")[:200] if pdf.pages else ""
+    return f"no 'effective' substring found; page 1 head: {first_text!r}"
+
+
 def _detect_effective_date(pdf: pdfplumber.PDF) -> date:
     for page in pdf.pages:
         text = page.extract_text() or ""
-        m = EFFECTIVE_DATE_RE.search(text)
-        if m:
-            from datetime import datetime as _dt
-
-            for fmt in ("%B %d, %Y", "%B %d %Y"):
-                try:
-                    return _dt.strptime(m.group(1).replace(",", ""), fmt.replace(",", "")).date()
-                except ValueError:
-                    continue
-    raise ValueError("could not locate effective date in PDF")
+        result = _parse_effective_date_from_text(text)
+        if result is not None:
+            return result
+    raise ValueError(
+        "could not locate effective date in PDF; nearby text:\n"
+        + _effective_date_diagnostic(pdf)
+    )
 
 
 def _classify_table(table: list[list[str | None]]) -> Direction | None:
