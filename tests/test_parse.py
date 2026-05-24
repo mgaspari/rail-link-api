@@ -48,6 +48,33 @@ def test_to_24h_am_pm() -> None:
     assert parse._to_24h("11:59", "PM") == "23:59"
 
 
+def test_repair_split_time_cells_single_line() -> None:
+    row = ["9 41", "10 0", "2 10 24", "11 18"]
+    assert parse._repair_split_time_cells(row) == [
+        "9 41", "10 02", "10 24", "11 18",
+    ]
+
+
+def test_repair_split_time_cells_multi_line() -> None:
+    row = [
+        "9 55\n10 25\nAM",
+        "3 5\n4 3\nPM",
+        "9 4 37\n1 5 08\nPM",
+        "5 04\n5 36\nPM",
+    ]
+    assert parse._repair_split_time_cells(row) == [
+        "9 55\n10 25\nAM",
+        "3 59\n4 31\nPM",
+        "4 37\n5 08\nPM",
+        "5 04\n5 36\nPM",
+    ]
+
+
+def test_repair_split_time_cells_leaves_intact_rows_alone() -> None:
+    row = ["6 44", "7 02", "7 26", None, ""]
+    assert parse._repair_split_time_cells(row) == row
+
+
 def test_parse_period_row_forward_fills() -> None:
     row = [None, "AM", None, None, "PM", None]
     assert parse._parse_period_row(row) == [None, "AM", "AM", "AM", "PM", "PM"]
