@@ -1,0 +1,12 @@
+{
+  "effective_date": "2025-10-06",
+  "last_updated": "2026-05-24T00:18:37+00:00",
+  "sources": [
+    {
+      "url": "https://www.mta.info/document/118701",
+      "hash": "ee5897ff1460f744435dcdb1b3629ff33a70fc81a8736152ead94d9b02424956",
+      "service": "weekday"
+    }
+  ],
+  "fair_use": "Schedule data republished from the MTA's Hudson Rail Link timetables for convenience. The MTA is the authoritative source; check the linked PDFs and meta.json before relying on these times."
+}
