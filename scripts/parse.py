@@ -195,6 +195,18 @@ def _classify_table(table: list[list[str | None]]) -> Direction | None:
     return "to-ny" if spuyten_idx == 0 else "to-spuyten-duyvil"
 
 
+def _table_head_snippet(table: list[list[str | None]], rows: int = 6) -> str:
+    head = [
+        [((c or "").strip() or "·") for c in (row or [])]
+        for row in table[:rows]
+    ]
+    return "\n".join(f"  row {i}: {r!r}" for i, r in enumerate(head))
+
+
+class _RouteRowNotFound(ValueError):
+    """Raised when _parse_table cannot find the route-letter header row."""
+
+
 def _parse_table(
     table: list[list[str | None]],
     direction: Direction,
@@ -210,7 +222,10 @@ def _parse_table(
             route_row_idx = i
             break
     if route_row_idx is None:
-        raise ValueError("could not locate route-letter header row")
+        raise _RouteRowNotFound(
+            "could not locate route-letter header row; first rows:\n"
+            + _table_head_snippet(table)
+        )
     if period_row_idx is None:
         period_row_idx = max(0, route_row_idx - 1)
 
@@ -287,22 +302,35 @@ def _extract_tables(page: pdfplumber.page.Page) -> list[list[list[str | None]]]:
 
 def parse_pdf(pdf_path: Path, service_day: ServiceDay) -> dict[str, object]:
     pdf_path = Path(pdf_path)
+    skip_reasons: list[str] = []
     with pdfplumber.open(pdf_path) as pdf:
         effective_date = _detect_effective_date(pdf)
         directions: dict[Direction, dict[str, object]] = {}
-        for page in pdf.pages:
-            for table in _extract_tables(page):
+        for page_num, page in enumerate(pdf.pages, start=1):
+            for table_idx, table in enumerate(_extract_tables(page)):
                 direction = _classify_table(table)
                 if direction is None:
                     continue
-                parsed = _parse_table(table, direction)
+                try:
+                    parsed = _parse_table(table, direction)
+                except _RouteRowNotFound as exc:
+                    skip_reasons.append(
+                        f"page {page_num} table {table_idx} "
+                        f"(classified as {direction}): {exc}"
+                    )
+                    continue
                 existing = directions.get(direction)
                 if existing is None:
                     directions[direction] = parsed
                 else:
                     existing["trips"].extend(parsed["trips"])  # type: ignore[union-attr]
     if not directions:
-        raise ValueError("no schedule tables found in PDF")
+        detail = (
+            "\nskipped tables:\n" + "\n".join(skip_reasons)
+            if skip_reasons
+            else ""
+        )
+        raise ValueError("no schedule tables found in PDF" + detail)
     return {
         "effective_date": effective_date.isoformat(),
         "service_day": service_day,

@@ -90,6 +90,19 @@ def test_parse_effective_date_from_text_returns_none(text: str) -> None:
     assert parse._parse_effective_date_from_text(text) is None
 
 
+def test_parse_table_raises_route_row_not_found_with_snippet() -> None:
+    table = [
+        ["", "header A", "header B"],
+        ["AM", None, None],
+        ["Spuyten Duyvil", "6 44", "7 14"],
+    ]
+    with pytest.raises(parse._RouteRowNotFound) as excinfo:
+        parse._parse_table(table, "to-ny")
+    msg = str(excinfo.value)
+    assert "first rows:" in msg
+    assert "Spuyten Duyvil" in msg
+
+
 def test_schema_rejects_bad_time() -> None:
     with pytest.raises(Exception):
         schemas.Departure(time="6:44", route="L", direction="to-ny")
