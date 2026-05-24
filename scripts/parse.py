@@ -57,6 +57,10 @@ EFFECTIVE_NUMERIC_DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 TIME_PAIR_RE = re.compile(r"^\s*(\d{1,2})\s+(\d{2})\s*$")
 ROUTE_LETTERS = {"J", "K", "L", "M"}
 AM_PM_RE = re.compile(r"^(AM|PM)$", re.IGNORECASE)
+TRAIN_ROW_RE = re.compile(
+    r"spuyten\s*duyvil.*lv\.?.*grand\s*central", re.IGNORECASE | re.DOTALL
+)
+BUS_SD_ROW_RE = re.compile(r"^spuyten\s*duyvil\s*station", re.IGNORECASE)
 
 
 def _slugify(name: str) -> str:
@@ -93,6 +97,68 @@ def _to_24h(time_12h: str, period: str) -> str:
     else:
         raise ValueError(f"period must be AM or PM, got {period!r}")
     return f"{h:02d}:{mm}"
+
+
+def _parse_train_cell(
+    cell: str | None,
+    sd_arrival_24h: str | None,
+    fallback_period: str | None,
+) -> tuple[str, str] | None:
+    """Parse a merged train cell like "6 03\\n6 32\\nAM" into 24h (sd_dep, gc_arr).
+
+    pdfplumber smashes the train-connection row's three logical sub-rows
+    (SD Lv. / GC Ar. / AM-PM) into a single cell per column on document
+    118701. The single AM/PM marker in the merged cell can refer to
+    either line, so we resolve the sd_departure period by requiring
+    ``sd_24 >= sd_arrival_24h`` (the train can't leave before the bus
+    arrives) and pick the gc_arrival period that keeps the train trip
+    same-day when possible, accepting a cross-midnight value otherwise.
+    Returns None when the cell is missing, malformed, or no period
+    assignment is consistent with the bus arrival.
+    """
+    if not cell:
+        return None
+    parts = [p.strip() for p in cell.split("\n") if p.strip()]
+    if len(parts) < 2:
+        return None
+    sd_12 = _normalize_time_cell(parts[0])
+    gc_12 = _normalize_time_cell(parts[1])
+    if sd_12 is None or gc_12 is None:
+        return None
+    cell_period: str | None = None
+    if len(parts) >= 3 and parts[2].upper() in {"AM", "PM"}:
+        cell_period = parts[2].upper()
+
+    periods: list[str] = []
+    for p in (fallback_period, cell_period, "AM", "PM"):
+        if p in {"AM", "PM"} and p not in periods:
+            periods.append(p)
+    if not periods:
+        return None
+
+    sd_24: str | None = None
+    for p in periods:
+        try:
+            t = _to_24h(sd_12, p)
+        except ValueError:
+            continue
+        if sd_arrival_24h is None or t >= sd_arrival_24h:
+            sd_24 = t
+            break
+    if sd_24 is None:
+        return None
+
+    gc_candidates: list[str] = []
+    for p in periods:
+        try:
+            gc_candidates.append(_to_24h(gc_12, p))
+        except ValueError:
+            continue
+    if not gc_candidates:
+        return None
+    same_day = [c for c in gc_candidates if c >= sd_24]
+    gc_24 = min(same_day) if same_day else min(gc_candidates)
+    return sd_24, gc_24
 
 
 def _parse_period_row(row: list[str | None]) -> list[str | None]:
@@ -240,17 +306,24 @@ def _parse_table(
         i for i in range(1, n_cols) if route_row[i] in ROUTE_LETTERS
     ]
 
+    train_row_idx: int | None = None
+    sd_stop_slug: str | None = None
     stops: list[dict[str, str]] = []
-    for row in data_rows:
+    for r_idx, row in enumerate(data_rows):
         name = (row[0] or "").strip() if row else ""
         if not name:
             continue
         if name.upper() in {"AM", "PM"} or name.upper() in ROUTE_LETTERS:
             continue
+        if TRAIN_ROW_RE.search(name):
+            train_row_idx = r_idx
+            continue
         sid = _slugify(name)
         if not sid:
             continue
         stops.append({"id": sid, "name": name})
+        if sd_stop_slug is None and BUS_SD_ROW_RE.search(name.split("\n")[0]):
+            sd_stop_slug = sid
 
     trips: list[dict[str, object]] = []
     for col in trip_cols:
@@ -262,7 +335,9 @@ def _parse_table(
         last_24h: str | None = None
         period_cursor = period
         stop_iter = iter(stops)
-        for row in data_rows:
+        for r_idx, row in enumerate(data_rows):
+            if r_idx == train_row_idx:
+                continue
             name = (row[0] or "").strip() if row else ""
             if not name:
                 continue
@@ -286,8 +361,22 @@ def _parse_table(
                     )
             col_stop_times[stop_def["id"]] = t24
             last_24h = t24
-        if col_stop_times:
-            trips.append({"route": route, "stops": col_stop_times})
+        if not col_stop_times:
+            continue
+        trip: dict[str, object] = {"route": route, "stops": col_stop_times}
+        if sd_stop_slug and sd_stop_slug in col_stop_times:
+            trip["sd_arrival"] = col_stop_times[sd_stop_slug]
+        if train_row_idx is not None:
+            train_row = data_rows[train_row_idx]
+            train_cell = train_row[col] if col < len(train_row) else None
+            sd_arr = col_stop_times.get(sd_stop_slug) if sd_stop_slug else None
+            ct = _parse_train_cell(train_cell, sd_arr, period_cursor)
+            if ct is not None:
+                trip["connecting_train"] = {
+                    "sd_departure": ct[0],
+                    "gc_arrival": ct[1],
+                }
+        trips.append(trip)
 
     return {"stops": stops, "trips": trips}
 

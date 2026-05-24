@@ -8,137 +8,272 @@
       {
         "time": "05:50",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "05:57",
+        "connecting_train": {
+          "sd_departure": "06:03",
+          "gc_arrival": "06:32"
+        }
       },
       {
         "time": "06:21",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "06:28",
+        "connecting_train": {
+          "sd_departure": "06:34",
+          "gc_arrival": "07:02"
+        }
       },
       {
         "time": "06:47",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "06:55",
+        "connecting_train": {
+          "sd_departure": "07:01",
+          "gc_arrival": "07:33"
+        }
       },
       {
         "time": "07:05",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "07:14",
+        "connecting_train": {
+          "sd_departure": "07:20",
+          "gc_arrival": "07:53"
+        }
       },
       {
         "time": "07:30",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "07:39",
+        "connecting_train": {
+          "sd_departure": "07:45",
+          "gc_arrival": "08:16"
+        }
       },
       {
         "time": "07:50",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "08:01",
+        "connecting_train": {
+          "sd_departure": "08:08",
+          "gc_arrival": "08:39"
+        }
       },
       {
         "time": "08:21",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "08:30",
+        "connecting_train": {
+          "sd_departure": "08:36",
+          "gc_arrival": "09:04"
+        }
       },
       {
         "time": "08:42",
         "route": "K",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "08:50",
+        "connecting_train": {
+          "sd_departure": "08:58",
+          "gc_arrival": "09:26"
+        }
       },
       {
         "time": "09:07",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "09:14",
+        "connecting_train": {
+          "sd_departure": "09:22",
+          "gc_arrival": "09:52"
+        }
       },
       {
         "time": "09:42",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "09:49",
+        "connecting_train": {
+          "sd_departure": "09:55",
+          "gc_arrival": "10:25"
+        }
       },
       {
         "time": "11:19",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "11:26",
+        "connecting_train": {
+          "sd_departure": "11:32",
+          "gc_arrival": "12:06"
+        }
       },
       {
         "time": "12:23",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "12:30",
+        "connecting_train": {
+          "sd_departure": "12:36",
+          "gc_arrival": "13:09"
+        }
       },
       {
         "time": "13:22",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "13:29",
+        "connecting_train": {
+          "sd_departure": "13:35",
+          "gc_arrival": "14:08"
+        }
       },
       {
         "time": "13:47",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "13:54",
+        "connecting_train": {
+          "sd_departure": "14:00",
+          "gc_arrival": "14:28"
+        }
       },
       {
         "time": "14:21",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "14:28",
+        "connecting_train": {
+          "sd_departure": "14:34",
+          "gc_arrival": "15:08"
+        }
       },
       {
         "time": "14:47",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "14:54",
+        "connecting_train": {
+          "sd_departure": "15:00",
+          "gc_arrival": "15:29"
+        }
       },
       {
         "time": "15:22",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "15:29",
+        "connecting_train": {
+          "sd_departure": "15:35",
+          "gc_arrival": "16:09"
+        }
       },
       {
         "time": "16:51",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "16:58",
+        "connecting_train": {
+          "sd_departure": "17:04",
+          "gc_arrival": "17:36"
+        }
       },
       {
         "time": "17:23",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "17:30",
+        "connecting_train": {
+          "sd_departure": "17:36",
+          "gc_arrival": "18:07"
+        }
       },
       {
         "time": "17:57",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "18:04",
+        "connecting_train": {
+          "sd_departure": "18:10",
+          "gc_arrival": "18:42"
+        }
       },
       {
         "time": "18:28",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "18:35",
+        "connecting_train": {
+          "sd_departure": "18:41",
+          "gc_arrival": "19:11"
+        }
       },
       {
         "time": "18:53",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "19:00",
+        "connecting_train": {
+          "sd_departure": "19:06",
+          "gc_arrival": "19:32"
+        }
       },
       {
         "time": "19:27",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "19:34",
+        "connecting_train": {
+          "sd_departure": "19:40",
+          "gc_arrival": "20:10"
+        }
       },
       {
         "time": "20:23",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "20:30",
+        "connecting_train": {
+          "sd_departure": "20:36",
+          "gc_arrival": "21:06"
+        }
       },
       {
         "time": "21:22",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "21:29",
+        "connecting_train": {
+          "sd_departure": "21:35",
+          "gc_arrival": "22:08"
+        }
       },
       {
         "time": "22:23",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "22:30",
+        "connecting_train": {
+          "sd_departure": "22:36",
+          "gc_arrival": "23:09"
+        }
       },
       {
         "time": "23:22",
         "route": "L",
-        "direction": "to-ny"
+        "direction": "to-ny",
+        "sd_arrival": "23:29",
+        "connecting_train": {
+          "sd_departure": "23:35",
+          "gc_arrival": "00:08"
+        }
       }
     ]
   }

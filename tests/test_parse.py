@@ -90,6 +90,74 @@ def test_parse_effective_date_from_text_returns_none(text: str) -> None:
     assert parse._parse_effective_date_from_text(text) is None
 
 
+@pytest.mark.parametrize(
+    "cell,sd_arrival,bus_period,expected",
+    [
+        # Standard AM trip: bus arrives 05:57, train labeled AM.
+        ("6 03\n6 32\nAM", "05:57", "AM", ("06:03", "06:32")),
+        # Noon transition: bus AM, cell labeled PM (referring to GC arrival).
+        ("11 32\n12 06\nPM", "11:26", "AM", ("11:32", "12:06")),
+        # Cross midnight: bus PM, cell AM refers to GC arrival next day.
+        ("11 35\n12 08\nAM", "23:29", "PM", ("23:35", "00:08")),
+        # No period in cell, falls back to bus period.
+        ("6 03\n6 32", "05:57", "AM", ("06:03", "06:32")),
+        # Degraded cell: single-digit minutes don't normalize.
+        ("3 5\n4 3\nPM", "15:30", "PM", None),
+        # Wholly None cell.
+        (None, "05:57", "AM", None),
+        # Only one line (no GC time at all).
+        ("6 03", "05:57", "AM", None),
+    ],
+)
+def test_parse_train_cell(cell, sd_arrival, bus_period, expected) -> None:
+    assert parse._parse_train_cell(cell, sd_arrival, bus_period) == expected
+
+
+def test_parse_table_extracts_connecting_train() -> None:
+    table = [
+        ["TO NEW YORK", "AM PEAK", None],
+        ["BUS ROUTE", "L", "M"],
+        [None, "AM", "AM"],
+        ["Henry Hudson Pkwy", "5 44", "6 44"],
+        ["Spuyten Duyvil Station\nTransfer to METRO-NORTH", "5 57", "6 55"],
+        ["Spuyten Duyvil Station Lv.\nGrand Central Ar.", "6 03\n6 32\nAM", "7 01\n7 33\nAM"],
+    ]
+    out = parse._parse_table(table, "to-ny")
+    assert [s["id"] for s in out["stops"]] == [
+        "henry-hudson-pkwy",
+        "spuyten-duyvil-station-transfer-to-metro-north",
+    ]
+    assert len(out["trips"]) == 2
+    assert out["trips"][0]["sd_arrival"] == "05:57"
+    assert out["trips"][0]["connecting_train"] == {
+        "sd_departure": "06:03",
+        "gc_arrival": "06:32",
+    }
+    assert out["trips"][1]["connecting_train"] == {
+        "sd_departure": "07:01",
+        "gc_arrival": "07:33",
+    }
+
+
+def test_departure_schema_accepts_train_fields() -> None:
+    d = schemas.Departure(
+        time="06:44", route="L", direction="to-ny",
+        sd_arrival="06:57",
+        connecting_train=schemas.ConnectingTrain(
+            sd_departure="07:03", gc_arrival="07:32",
+        ),
+    )
+    assert d.sd_arrival == "06:57"
+    assert d.connecting_train.gc_arrival == "07:32"
+
+
+def test_departure_schema_omits_train_when_absent() -> None:
+    d = schemas.Departure(time="06:44", route="L", direction="to-ny")
+    dumped = d.model_dump(mode="json", exclude_none=True)
+    assert "sd_arrival" not in dumped
+    assert "connecting_train" not in dumped
+
+
 def test_parse_table_finds_period_row_below_route_row() -> None:
     # Layout from MTA 118701: route letters on row 1, AM/PM row 2, stops row 3+.
     table = [

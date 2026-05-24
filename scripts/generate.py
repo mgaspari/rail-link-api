@@ -77,7 +77,13 @@ def _build_departures(
                 if time is None:
                     continue
                 deps.append(
-                    Departure(time=time, route=trip["route"], direction=direction)
+                    Departure(
+                        time=time,
+                        route=trip["route"],
+                        direction=direction,
+                        sd_arrival=trip.get("sd_arrival"),
+                        connecting_train=trip.get("connecting_train"),
+                    )
                 )
         if deps:
             deps.sort(key=lambda d: (d.time, d.route, d.direction))
@@ -147,7 +153,10 @@ def generate(
             # but every value is None — treat as a bug, not data we should write.
             raise ValueError(f"stop {stop_ref.id!r} has zero departures")
         stop = Stop(stop=stop_ref, departures=departures)
-        _write_json(STOPS_DIR / f"{stop_ref.id}.json", stop.model_dump(mode="json"))
+        _write_json(
+            STOPS_DIR / f"{stop_ref.id}.json",
+            stop.model_dump(mode="json", exclude_none=True),
+        )
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -27,14 +27,30 @@ class _Strict(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
+class ConnectingTrain(_Strict):
+    sd_departure: str
+    gc_arrival: str
+
+    @field_validator("sd_departure", "gc_arrival")
+    @classmethod
+    def _check_time(cls, v: str) -> str:
+        if not TIME_RE.match(v):
+            raise ValueError(f"time must be HH:MM 24h, got {v!r}")
+        return v
+
+
 class Departure(_Strict):
     time: str
     route: str
     direction: Direction
+    sd_arrival: str | None = None
+    connecting_train: ConnectingTrain | None = None
 
-    @field_validator("time")
+    @field_validator("time", "sd_arrival")
     @classmethod
-    def _check_time(cls, v: str) -> str:
+    def _check_time(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
         if not TIME_RE.match(v):
             raise ValueError(f"time must be HH:MM 24h, got {v!r}")
         return v
@@ -135,6 +151,7 @@ class Index(_Strict):
 
 
 __all__ = [
+    "ConnectingTrain",
     "Departure",
     "Direction",
     "Index",
