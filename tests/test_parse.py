@@ -90,6 +90,24 @@ def test_parse_effective_date_from_text_returns_none(text: str) -> None:
     assert parse._parse_effective_date_from_text(text) is None
 
 
+def test_parse_table_finds_period_row_below_route_row() -> None:
+    # Layout from MTA 118701: route letters on row 1, AM/PM row 2, stops row 3+.
+    table = [
+        ["TO NEW YORK", "AM PEAK", None],
+        ["BUS ROUTE", "L", "M"],
+        [None, "AM", "AM"],
+        ["Henry Hudson Pkwy", "6 44", "7 02"],
+        ["Spuyten Duyvil", "6 57", "7 15"],
+    ]
+    out = parse._parse_table(table, "to-ny")
+    assert [s["id"] for s in out["stops"]] == ["henry-hudson-pkwy", "spuyten-duyvil"]
+    assert len(out["trips"]) == 2
+    assert out["trips"][0] == {
+        "route": "L",
+        "stops": {"henry-hudson-pkwy": "06:44", "spuyten-duyvil": "06:57"},
+    }
+
+
 def test_parse_table_raises_route_row_not_found_with_snippet() -> None:
     table = [
         ["", "header A", "header B"],
@@ -214,6 +232,29 @@ def test_generate_drops_unreferenced_stops(tmp_path, monkeypatch, capsys) -> Non
 
     errors = validate.validate()
     assert errors == [], errors
+
+
+def test_validate_flags_empty_index(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(validate, "DOCS_API", tmp_path / "api")
+    monkeypatch.setattr(validate, "STOPS_DIR", tmp_path / "api" / "stops")
+    (tmp_path / "api").mkdir()
+    (tmp_path / "api" / "stops").mkdir()
+    (tmp_path / "api" / "index.json").write_text(json.dumps({
+        "stops": [], "routes": [], "services": ["weekday"],
+    }))
+    (tmp_path / "api" / "meta.json").write_text(json.dumps({
+        "effective_date": "2025-10-06",
+        "last_updated": "2026-01-01T00:00:00+00:00",
+        "sources": [{
+            "url": "https://www.mta.info/document/118701",
+            "hash": "0" * 64,
+            "service": "weekday",
+        }],
+        "fair_use": "x",
+    }))
+    errors = validate.validate()
+    assert any("zero stops" in e for e in errors), errors
+    assert any("zero routes" in e for e in errors), errors
 
 
 def test_validate_flags_oversized_index(tmp_path, monkeypatch) -> None:

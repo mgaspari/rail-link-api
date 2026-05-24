@@ -92,6 +92,11 @@ def validate() -> list[str]:
     _check(index_path, INDEX_LIMIT_BYTES, errors)
     _check(meta_path, INDEX_LIMIT_BYTES, errors)
 
+    if not index.stops:
+        errors.append("index.json has zero stops")
+    if not index.routes:
+        errors.append("index.json has zero routes")
+
     prev_count = _previous_index_stop_count()
     if prev_count is not None and len(index.stops) < prev_count:
         errors.append(

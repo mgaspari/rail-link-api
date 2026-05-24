@@ -216,10 +216,11 @@ def _parse_table(
     route_row_idx: int | None = None
     for i, row in enumerate(table[:6]):
         cells = [(c or "").strip().upper() for c in row]
-        if any(AM_PM_RE.match(c) for c in cells if c):
+        if period_row_idx is None and any(AM_PM_RE.match(c) for c in cells if c):
             period_row_idx = i
-        if any(c in ROUTE_LETTERS for c in cells):
+        if route_row_idx is None and any(c in ROUTE_LETTERS for c in cells):
             route_row_idx = i
+        if period_row_idx is not None and route_row_idx is not None:
             break
     if route_row_idx is None:
         raise _RouteRowNotFound(
@@ -231,7 +232,8 @@ def _parse_table(
 
     period_row = _parse_period_row(table[period_row_idx])
     route_row = [(c or "").strip().upper() for c in table[route_row_idx]]
-    data_rows = table[route_row_idx + 1 :]
+    header_end = max(route_row_idx, period_row_idx)
+    data_rows = table[header_end + 1 :]
 
     n_cols = len(route_row)
     trip_cols = [
@@ -324,13 +326,18 @@ def parse_pdf(pdf_path: Path, service_day: ServiceDay) -> dict[str, object]:
                     directions[direction] = parsed
                 else:
                     existing["trips"].extend(parsed["trips"])  # type: ignore[union-attr]
-    if not directions:
+    total_trips = sum(len(d["trips"]) for d in directions.values())  # type: ignore[arg-type]
+    if not directions or total_trips == 0:
         detail = (
             "\nskipped tables:\n" + "\n".join(skip_reasons)
             if skip_reasons
             else ""
         )
-        raise ValueError("no schedule tables found in PDF" + detail)
+        raise ValueError(
+            f"no usable schedule data in PDF "
+            f"(directions={list(directions)}, total_trips={total_trips})"
+            + detail
+        )
     return {
         "effective_date": effective_date.isoformat(),
         "service_day": service_day,
