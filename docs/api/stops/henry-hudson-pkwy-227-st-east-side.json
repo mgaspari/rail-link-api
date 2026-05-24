@@ -1,0 +1,40 @@
+{
+  "stop": {
+    "id": "henry-hudson-pkwy-227-st-east-side",
+    "name": "Henry Hudson Pkwy. & 227 St. (east side)"
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "06:44",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:02",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:26",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:50",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:17",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:39",
+        "route": "M",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "stop": {
+    "id": "spuyten-duyvil-station-transfer-to-metro-north",
+    "name": "Spuyten Duyvil Station\nTransfer to METRO-NORTH"
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "05:57",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:28",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:55",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:55",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:55",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:14",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:14",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:14",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:39",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:39",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:39",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:01",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:01",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:01",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:30",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:30",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:30",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:50",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:50",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:50",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:14",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:49",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "10:10",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "10:32",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "11:26",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "12:30",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:29",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:54",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:28",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:54",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "15:29",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "16:58",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:30",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:04",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:35",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "19:00",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "19:34",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "20:30",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "21:29",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "22:30",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "23:29",
+        "route": "L",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

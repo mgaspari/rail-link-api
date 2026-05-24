@@ -1,0 +1,40 @@
+{
+  "stop": {
+    "id": "riverdale-ave-230-st-west-side",
+    "name": "Riverdale Ave. & 230 St. (west side)"
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "06:49",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:07",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:31",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:55",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:22",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:44",
+        "route": "M",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

@@ -1,6 +1,68 @@
 {
-  "stops": [],
-  "routes": [],
+  "stops": [
+    {
+      "id": "henry-hudson-pkwy-227-st-east-side",
+      "name": "Henry Hudson Pkwy. & 227 St. (east side)"
+    },
+    {
+      "id": "henry-hudson-pkwy-235-st-east-side",
+      "name": "Henry Hudson Pkwy. & 235 St. (east side)"
+    },
+    {
+      "id": "riverdale-ave-236-st-west-side",
+      "name": "Riverdale Ave. & 236 St. (west side)"
+    },
+    {
+      "id": "riverdale-ave-230-st-west-side",
+      "name": "Riverdale Ave. & 230 St. (west side)"
+    },
+    {
+      "id": "riverdale-ave-231-st-east-side",
+      "name": "Riverdale Ave. & 231 St. (east side)"
+    },
+    {
+      "id": "riverdale-ave-236-st-east-side",
+      "name": "Riverdale Ave. & 236 St. (east side)"
+    },
+    {
+      "id": "henry-hudson-pkwy-246-st",
+      "name": "Henry Hudson Pkwy. & 246 St."
+    },
+    {
+      "id": "henry-hudson-pkwy-239-st",
+      "name": "Henry Hudson Pkwy. & 239 St."
+    },
+    {
+      "id": "239-st-independence-ave",
+      "name": "239 St. & Independence Ave."
+    },
+    {
+      "id": "henry-hudson-pkwy-236-st",
+      "name": "Henry Hudson Pkwy. & 236 St."
+    },
+    {
+      "id": "henry-hudson-pkwy-232-st",
+      "name": "Henry Hudson Pkwy. & 232 St."
+    },
+    {
+      "id": "henry-hudson-pkwy-independence-ave",
+      "name": "Henry Hudson Pkwy. & Independence Ave."
+    },
+    {
+      "id": "kappock-st-knolls-crescent",
+      "name": "Kappock St. & Knolls Crescent"
+    },
+    {
+      "id": "spuyten-duyvil-station-transfer-to-metro-north",
+      "name": "Spuyten Duyvil Station\nTransfer to METRO-NORTH"
+    }
+  ],
+  "routes": [
+    "J",
+    "K",
+    "L",
+    "M"
+  ],
   "services": [
     "weekday"
   ]

@@ -1,0 +1,40 @@
+{
+  "stop": {
+    "id": "henry-hudson-pkwy-235-st-east-side",
+    "name": "Henry Hudson Pkwy. & 235 St. (east side)"
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "06:45",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:03",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:27",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:51",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:18",
+        "route": "M",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:40",
+        "route": "M",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

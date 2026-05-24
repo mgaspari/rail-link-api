@@ -1,0 +1,145 @@
+{
+  "stop": {
+    "id": "239-st-independence-ave",
+    "name": "239 St. & Independence Ave."
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "05:47",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:18",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:46",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:04",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:28",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:52",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:20",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:41",
+        "route": "J",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:04",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:39",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "11:16",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "12:20",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:19",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:44",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:18",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:44",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "15:19",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "16:48",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:20",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:54",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:25",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:50",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "19:24",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "20:20",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "21:19",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "22:20",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "23:19",
+        "route": "L",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "stop": {
+    "id": "riverdale-ave-231-st-east-side",
+    "name": "Riverdale Ave. & 231 St. (east side)"
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "05:41",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:12",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:56",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:32",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:53",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "10:15",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "11:09",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "12:13",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:12",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:37",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:11",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:37",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "15:12",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "16:41",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:13",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:47",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:18",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:43",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "19:17",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "20:13",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "21:12",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "22:13",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "23:12",
+        "route": "L",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}

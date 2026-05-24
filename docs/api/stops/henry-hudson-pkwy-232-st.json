@@ -1,0 +1,145 @@
+{
+  "stop": {
+    "id": "henry-hudson-pkwy-232-st",
+    "name": "Henry Hudson Pkwy. & 232 St."
+  },
+  "departures": {
+    "weekday": [
+      {
+        "time": "05:50",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:21",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "06:47",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:05",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:30",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "07:50",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:21",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "08:42",
+        "route": "K",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:07",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "09:42",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "11:19",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "12:23",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:22",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "13:47",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:21",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "14:47",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "15:22",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "16:51",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:23",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "17:57",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:28",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "18:53",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "19:27",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "20:23",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "21:22",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "22:23",
+        "route": "L",
+        "direction": "to-ny"
+      },
+      {
+        "time": "23:22",
+        "route": "L",
+        "direction": "to-ny"
+      }
+    ]
+  }
+}
