@@ -46,6 +46,26 @@
         }
       },
       {
+        "time": "09:54",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "10:10",
+        "connecting_train": {
+          "sd_departure": "10:16",
+          "gc_arrival": "10:45"
+        }
+      },
+      {
+        "time": "10:16",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "10:32",
+        "connecting_train": {
+          "sd_departure": "10:38",
+          "gc_arrival": "11:09"
+        }
+      },
+      {
         "time": "11:10",
         "route": "L",
         "direction": "to-ny",
@@ -113,6 +133,26 @@
         "connecting_train": {
           "sd_departure": "15:35",
           "gc_arrival": "16:09"
+        }
+      },
+      {
+        "time": "15:37",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "15:53",
+        "connecting_train": {
+          "sd_departure": "15:59",
+          "gc_arrival": "16:31"
+        }
+      },
+      {
+        "time": "16:15",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "16:31",
+        "connecting_train": {
+          "sd_departure": "16:37",
+          "gc_arrival": "17:08"
         }
       },
       {

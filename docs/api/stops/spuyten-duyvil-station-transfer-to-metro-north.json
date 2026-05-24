@@ -316,6 +316,26 @@
         }
       },
       {
+        "time": "15:53",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "15:53",
+        "connecting_train": {
+          "sd_departure": "15:59",
+          "gc_arrival": "16:31"
+        }
+      },
+      {
+        "time": "16:31",
+        "route": "L",
+        "direction": "to-ny",
+        "sd_arrival": "16:31",
+        "connecting_train": {
+          "sd_departure": "16:37",
+          "gc_arrival": "17:08"
+        }
+      },
+      {
         "time": "16:58",
         "route": "L",
         "direction": "to-ny",
