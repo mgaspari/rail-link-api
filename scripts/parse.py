@@ -55,6 +55,8 @@ EFFECTIVE_MONTH_DATE_RE = re.compile(
 )
 EFFECTIVE_NUMERIC_DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 TIME_PAIR_RE = re.compile(r"^\s*(\d{1,2})\s+(\d{2})\s*$")
+SPLIT_PREV_TIME_RE = re.compile(r"^\s*(\d{1,2})\s+(\d)\s*$")
+SPLIT_CURR_TIME_RE = re.compile(r"^\s*(\d)\s+(\d{1,2})\s+(\d{2})\s*$")
 ROUTE_LETTERS = {"J", "K", "L", "M"}
 AM_PM_RE = re.compile(r"^(AM|PM)$", re.IGNORECASE)
 TRAIN_ROW_RE = re.compile(
@@ -66,6 +68,41 @@ BUS_SD_ROW_RE = re.compile(r"^spuyten\s*duyvil\s*station", re.IGNORECASE)
 def _slugify(name: str) -> str:
     s = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     return s
+
+
+def _repair_split_time_cells(
+    row: list[str | None],
+) -> list[str | None]:
+    """Recover times whose last minute digit pdfplumber pushed into the next cell.
+
+    Some off-peak columns in the weekday PDF have vertical lines that
+    fall a digit-width left of where they belong, so a cell that should
+    read "10 02" arrives as "10 0" while the adjacent cell starts with
+    the stray "2" ("2 10 24"). Multi-line cells (the train-connection
+    row) exhibit the same defect on each line. Repair line-by-line so
+    we don't mistakenly merge unrelated content.
+    """
+    out = list(row)
+    for i in range(len(out) - 1):
+        a, b = out[i], out[i + 1]
+        if not a or not b:
+            continue
+        a_lines = a.split("\n")
+        b_lines = b.split("\n")
+        new_a = list(a_lines)
+        new_b = list(b_lines)
+        changed = False
+        for k in range(min(len(a_lines), len(b_lines))):
+            m_a = SPLIT_PREV_TIME_RE.match(a_lines[k])
+            m_b = SPLIT_CURR_TIME_RE.match(b_lines[k])
+            if m_a and m_b:
+                new_a[k] = f"{m_a.group(1)} {m_a.group(2)}{m_b.group(1)}"
+                new_b[k] = f"{m_b.group(2)} {m_b.group(3)}"
+                changed = True
+        if changed:
+            out[i] = "\n".join(new_a)
+            out[i + 1] = "\n".join(new_b)
+    return out
 
 
 def _normalize_time_cell(cell: str | None) -> str | None:
@@ -388,7 +425,11 @@ def _extract_tables(page: pdfplumber.page.Page) -> list[list[list[str | None]]]:
         "snap_tolerance": 3,
     }
     raw = page.extract_tables(settings)
-    return [t for t in raw if t and len(t) >= 3]
+    return [
+        [_repair_split_time_cells(row) for row in t]
+        for t in raw
+        if t and len(t) >= 3
+    ]
 
 
 def parse_pdf(pdf_path: Path, service_day: ServiceDay) -> dict[str, object]:
