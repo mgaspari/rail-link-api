@@ -90,12 +90,31 @@ def _write_json(path: Path, payload: dict | list) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n")
 
 
+def _referenced_stop_ids(parsed: dict[str, dict[str, object]]) -> set[str]:
+    """Stop ids that at least one trip records a time for."""
+    referenced: set[str] = set()
+    for service_data in parsed.values():
+        for direction_data in service_data.get("directions", {}).values():  # type: ignore[union-attr]
+            for trip in direction_data.get("trips", []):  # type: ignore[union-attr]
+                referenced.update(trip["stops"].keys())
+    return referenced
+
+
 def generate(
     parsed: dict[str, dict[str, object]],
     sources: list[dict[str, str]],
 ) -> None:
     """Write index.json, meta.json, and per-stop JSON files."""
-    stops = _merge_stops(parsed)
+    candidate_stops = _merge_stops(parsed)
+    referenced = _referenced_stop_ids(parsed)
+    stops = [s for s in candidate_stops if s.id in referenced]
+    for dropped in candidate_stops:
+        if dropped.id not in referenced:
+            print(
+                f"warn: dropping stop {dropped.id!r} "
+                f"({dropped.name!r}) with zero departures",
+                file=sys.stderr,
+            )
     routes = _collect_routes(parsed)
     services: list[ServiceDay] = sorted(parsed.keys())  # type: ignore[assignment]
 
@@ -124,6 +143,8 @@ def generate(
     for stop_ref in stops:
         departures = _build_departures(parsed, stop_ref.id)
         if not departures:
+            # Filtered above; reaching here means a stop appears in trip['stops']
+            # but every value is None — treat as a bug, not data we should write.
             raise ValueError(f"stop {stop_ref.id!r} has zero departures")
         stop = Stop(stop=stop_ref, departures=departures)
         _write_json(STOPS_DIR / f"{stop_ref.id}.json", stop.model_dump(mode="json"))

@@ -188,6 +188,34 @@ def test_generate_then_validate_roundtrip(tmp_path, monkeypatch) -> None:
     assert deps[0]["direction"] == "to-ny"
 
 
+def test_generate_drops_unreferenced_stops(tmp_path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(generate, "DOCS_API", tmp_path / "api")
+    monkeypatch.setattr(generate, "STOPS_DIR", tmp_path / "api" / "stops")
+    monkeypatch.setattr(validate, "DOCS_API", tmp_path / "api")
+    monkeypatch.setattr(validate, "STOPS_DIR", tmp_path / "api" / "stops")
+
+    parsed = _fake_parsed()
+    parsed["weekday"]["directions"]["to-ny"]["stops"].append(  # type: ignore[index]
+        {"id": "ghost-stop", "name": "Ghost Stop"}
+    )
+    sources = [{
+        "url": "https://www.mta.info/document/118701",
+        "hash": "0" * 64,
+        "service": "weekday",
+    }]
+    generate.generate(parsed, sources)
+
+    err = capsys.readouterr().err
+    assert "ghost-stop" in err
+
+    index = json.loads((tmp_path / "api" / "index.json").read_text())
+    assert "ghost-stop" not in {s["id"] for s in index["stops"]}
+    assert not (tmp_path / "api" / "stops" / "ghost-stop.json").exists()
+
+    errors = validate.validate()
+    assert errors == [], errors
+
+
 def test_validate_flags_oversized_index(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(validate, "DOCS_API", tmp_path / "api")
     monkeypatch.setattr(validate, "STOPS_DIR", tmp_path / "api" / "stops")
