@@ -33,7 +33,14 @@ DEFAULT_SOURCES: list[dict[str, str]] = [
     },
 ]
 
-USER_AGENT = "rail-link-api/0.1 (+https://github.com/mgaspari/rail-link-api)"
+USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+)
+ACCEPT_HEADERS = {
+    "Accept": "application/pdf,text/html;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 TIMEOUT_SECONDS = 30
 
 
@@ -102,7 +109,7 @@ def fetch_one(source: dict[str, str], session: requests.Session) -> FetchResult:
 def fetch_all(sources: list[dict[str, str]] | None = None) -> list[FetchResult]:
     sources = sources if sources is not None else DEFAULT_SOURCES
     session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
+    session.headers.update({"User-Agent": USER_AGENT, **ACCEPT_HEADERS})
     return [fetch_one(s, session) for s in sources]
 
 
