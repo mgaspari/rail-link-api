@@ -21,7 +21,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-import requests
+from curl_cffi import requests as cffi_requests
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SOURCES_DIR = REPO_ROOT / "data" / "sources"
@@ -33,15 +33,26 @@ DEFAULT_SOURCES: list[dict[str, str]] = [
     },
 ]
 
-USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-)
-ACCEPT_HEADERS = {
-    "Accept": "application/pdf,text/html;q=0.9,*/*;q=0.8",
+BROWSER_HEADERS = {
+    "Accept": (
+        "text/html,application/xhtml+xml,application/xml;q=0.9,"
+        "image/avif,image/webp,image/apng,*/*;q=0.8,"
+        "application/signed-exchange;v=b3;q=0.7"
+    ),
     "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-User": "?1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Ch-Ua": '"Chromium";v="131", "Not_A Brand";v="24"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": '"Linux"',
+    "Cache-Control": "max-age=0",
 }
 TIMEOUT_SECONDS = 30
+IMPERSONATE_TARGET = "chrome131"
 
 
 @dataclass
@@ -73,7 +84,29 @@ def _read_text(path: Path) -> str | None:
         return None
 
 
-def fetch_one(source: dict[str, str], session: requests.Session) -> FetchResult:
+def _diagnose_response(url: str, response: "cffi_requests.Response") -> str:
+    """Format a diagnostic snippet for a non-2xx response."""
+    interesting = {
+        k: v for k, v in response.headers.items()
+        if k.lower() in {
+            "server", "content-type", "content-length",
+            "cf-ray", "cf-mitigated", "x-akamai-request-id",
+            "x-cache", "x-cdn", "set-cookie", "location",
+        }
+    }
+    body_snippet = ""
+    try:
+        text = response.text
+        body_snippet = text[:400].replace("\n", " ")
+    except Exception:
+        pass
+    return (
+        f"HTTP {response.status_code} from {url}; "
+        f"headers={interesting!r}; body[:400]={body_snippet!r}"
+    )
+
+
+def fetch_one(source: dict[str, str], session: "cffi_requests.Session") -> FetchResult:
     url = source["url"]
     service_day = source["service_day"]
 
@@ -82,7 +115,8 @@ def fetch_one(source: dict[str, str], session: requests.Session) -> FetchResult:
     sha_path = SOURCES_DIR / f"{service_day}.sha256"
 
     response = session.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True)
-    response.raise_for_status()
+    if response.status_code >= 400:
+        raise RuntimeError(_diagnose_response(url, response))
 
     content_type = response.headers.get("content-type", "")
     if "pdf" not in content_type.lower() and not response.content.startswith(b"%PDF"):
@@ -108,8 +142,10 @@ def fetch_one(source: dict[str, str], session: requests.Session) -> FetchResult:
 
 def fetch_all(sources: list[dict[str, str]] | None = None) -> list[FetchResult]:
     sources = sources if sources is not None else DEFAULT_SOURCES
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT, **ACCEPT_HEADERS})
+    session = cffi_requests.Session(
+        impersonate=IMPERSONATE_TARGET,
+        headers=BROWSER_HEADERS,
+    )
     return [fetch_one(s, session) for s in sources]
 
 
