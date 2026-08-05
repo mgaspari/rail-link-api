@@ -52,7 +52,7 @@ BROWSER_HEADERS = {
     "Cache-Control": "max-age=0",
 }
 TIMEOUT_SECONDS = 30
-IMPERSONATE_TARGET = "chrome131"
+IMPERSONATE_TARGET = "chrome124"
 
 
 @dataclass
